@@ -7,57 +7,53 @@
     storageBucket: "test-591bb.appspot.com",
     messagingSenderId: "115420572333"
   };
+
   firebase.initializeApp(config);
 
 
 //firebase database variable
 var database = firebase.database();
 
-var employeeName = "",
-    role = "",
-    startDate = "", // DD/MM/YY
-    monthlyRate = "";
-
-function relativeTime (dateSplit) {
-    var relTime = moment(dateSplit, "DDMMYY").fromNow();
-    var relYears = relTime.split(" ")[0];
-    return relYears;
-};
-
-function monthsWorked (startDate) {
-    var dateSplit = startDate.split("/");
-    var currentDateSplit = moment().format("DD/MM/YY").split('/');
-    var worked = relativeTime(dateSplit) * 12;
-
-    return worked;
-};
-
-// function totalBilled (monthlyRate, monthsWorked) {
-//     var monthlyRate.split("/");
-//     var totalBilled = monthlyRate * monthsWorked;
-//     return totalBilled;
-// }
-
 //When changes are made to database append change to table
-// database.ref("/employeeData").on("value", function(snapshot) {
+database.ref("/employeeNode").on("child_added", function(childSnapshot, prevChildKey) {
 
-// });
+    var empName = childSnapshot.val().name,
+        empRole = childSnapshot.val().role,
+        empStart = childSnapshot.val().start,
+        empRate = childSnapshot.val().rate;
+
+    // Prettify the employee start
+    var empStartPretty = moment.unix(empStart).format("MM/DD/YY");
+
+    // Calculate the months worked using hardcore math
+    // To calculate the months worked
+    var empMonths = moment().diff(moment(empStart, "X"), "months");
+    console.log(empMonths);
+
+    // Calculate the total billed rate
+    var empBilled = empMonths * empRate;
+    console.log(empBilled);
+
+    // Add each train's data into the table
+    $("#employee-table > tbody").append("<tr><td>" + empName + "</td><td>" + empRole + "</td><td>" +
+    empStartPretty + "</td><td>" + empMonths + "</td><td>" + empRate + "</td><td>" + empBilled + "</td></tr>");
+
+});
 
 //When employee submits form enter into firebase database
 $("#target").submit(function(event) {
     event.preventDefault();
-
-    employeeName = $("#employee-name-input").val().trim();
-    role = $("#role-input").val().trim();
-    startDate = $("#start-input").val().trim();
-    monthlyRate = parseInt($("#rate-input").val().trim());
-
-    database.ref("/employeeData").push({
-        "employeeName": employeeName,
-        "role": role,
-        "startDate": startDate,
-        "monthsWorked": monthsWorked(startDate),
-        "monthlyRate": monthlyRate,
+    
+    var empName = $("#employee-name-input").val().trim(),
+        empRole = $("#role-input").val().trim(),
+        empStart = moment($("#start-input").val().trim(), "DD/MM/YY").format("X"),
+        empRate = $("#rate-input").val().trim();
+    console.log(empStart);
+    database.ref("/employeeNode").push({
+        "name": empName,
+        "role": empRole,
+        "date": empStart,
+        "rate": empRate,
     })
 });
 
