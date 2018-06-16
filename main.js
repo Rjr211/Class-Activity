@@ -29,8 +29,7 @@ function monthsWorked (startDate) {
     var currentDateSplit = moment().format("DD/MM/YY").split('/');
     var worked = relativeTime(dateSplit) * 12;
 
-    console.log(worked);
-    // console.log(moment().format('MM'));
+    return worked;
 };
 
 // function totalBilled (monthlyRate, monthsWorked) {
@@ -51,14 +50,14 @@ $("#target").submit(function(event) {
     employeeName = $("#employee-name-input").val().trim();
     role = $("#role-input").val().trim();
     startDate = $("#start-input").val().trim();
-    monthlyRate = $("#rate-input").val().trim();
+    monthlyRate = parseInt($("#rate-input").val().trim());
 
-    // database.ref("/employeeData").push({
-    //     "employeeName": employeeName,
-    //     "role": role,
-    //     "startDate": startDate,
-    //     "monthlyRate": monthlyRate,
-    // })
-    console.log(monthsWorked(startDate));
+    database.ref("/employeeData").push({
+        "employeeName": employeeName,
+        "role": role,
+        "startDate": startDate,
+        "monthsWorked": monthsWorked(startDate),
+        "monthlyRate": monthlyRate,
+    })
 });
 
