@@ -15,12 +15,22 @@ var database = firebase.database();
 
 var employeeName = "",
     role = "",
-    startDate = "",
+    startDate = "", // DD/MM/YY
     monthlyRate = "";
+
+function relativeTime (dateSplit) {
+    var relTime = moment(dateSplit, "DDMMYY").fromNow();
+    var relYears = relTime.split(" ")[0];
+    return relYears;
+};
 
 function monthsWorked (startDate) {
     var dateSplit = startDate.split("/");
-    console.log(moment().calendar());
+    var currentDateSplit = moment().format("DD/MM/YY").split('/');
+    var worked = relativeTime(dateSplit) * 12;
+
+    console.log(worked);
+    // console.log(moment().format('MM'));
 };
 
 // function totalBilled (monthlyRate, monthsWorked) {
@@ -43,12 +53,12 @@ $("#target").submit(function(event) {
     startDate = $("#start-input").val().trim();
     monthlyRate = $("#rate-input").val().trim();
 
-    database.ref("/employeeData").push({
-        "employeeName": employeeName,
-        "role": role,
-        "startDate": startDate,
-        "monthlyRate": monthlyRate,
-    })
-    // console.log(monthsWorked(startDate));
+    // database.ref("/employeeData").push({
+    //     "employeeName": employeeName,
+    //     "role": role,
+    //     "startDate": startDate,
+    //     "monthlyRate": monthlyRate,
+    // })
+    console.log(monthsWorked(startDate));
 });
 
