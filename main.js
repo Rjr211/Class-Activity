@@ -27,6 +27,11 @@ function totalBilled (monthlyRate, monthsWorked) {
    return totalBilled;
 }
 
-$(document).ready(function() {
+$("form").submit(function(event) {
+    event.preventDefault();
 
-})
+    database.ref("").push({
+
+    })
+
+});
