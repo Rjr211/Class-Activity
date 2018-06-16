@@ -18,15 +18,23 @@ var employeeName = "",
     startDate = "",
     monthlyRate = "";
 
-//function monthsWorked (startDate) {
-
-//};
+function monthsWorked (startDate) {
+    var dateSplit = startDate.split("/");
+    console.log(moment().calendar());
+};
 
 // function totalBilled (monthlyRate, monthsWorked) {
-//    var totalBilled = monthlyRate * monthsWorked;
-//    return totalBilled;
+//     var monthlyRate.split("/");
+//     var totalBilled = monthlyRate * monthsWorked;
+//     return totalBilled;
 // }
 
+//When changes are made to database append change to table
+// database.ref("/employeeData").on("value", function(snapshot) {
+
+// });
+
+//When employee submits form enter into firebase database
 $("#target").submit(function(event) {
     event.preventDefault();
 
@@ -41,5 +49,6 @@ $("#target").submit(function(event) {
         "startDate": startDate,
         "monthlyRate": monthlyRate,
     })
-
+    // console.log(monthsWorked(startDate));
 });
+
